@@ -1,4 +1,4 @@
-from hollard import main as fetch_executive_data
+import requests
 import re
 
 # Abbreviations mapping
@@ -33,32 +33,29 @@ def normalize_text(text):
 
     return text
 
-# Fetch executive data at startup
-executive_data = fetch_executive_data()
-
-# Normalize executive data
-normalized_executive_data = {normalize_text(position): name for position, name in executive_data.items()}
-
-# Debug: Log the executive data
-print("DEBUG: Executive Data Loaded:")
-for position, name in executive_data.items():
-    print(f"Position: {position} -> Name: {name}")
-    print(f"Normalized Position: {normalize_text(position)}")
+# Function to fetch executive data from the Flask API
+def fetch_executive_data(position):
+    """Fetch executive data from the deployed Flask app."""
+    url = f'https://hollard-copilot.onrender.com/get_executive?position={position}'
+    try:
+        response = requests.get(url)
+        data = response.json()
+        return data.get('name', 'Sorry, no executive found for that position.')
+    except Exception as e:
+        return f"Error fetching data: {str(e)}"
 
 def process_query(query):
     """Process the user query and match it to an executive position."""
     normalized_query = normalize_text(query)
-
+    
     # Debug: Log normalized query
     print(f"DEBUG: Normalized Query: {normalized_query}")
-
-    # Check if the query matches any position
-    for position, name in normalized_executive_data.items():
-        if position in normalized_query:
-            return name
-
-    # If no match is found, return a message
-    return "Sorry, I couldn't find anyone with that position."
+    
+    # Fetch executive name from the API
+    executive_name = fetch_executive_data(normalized_query)
+    
+    # Return executive name or a fallback message
+    return executive_name
 
 def main():
     """Main function to handle the conversation."""
