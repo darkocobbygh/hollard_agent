@@ -2,7 +2,7 @@ services:
   - type: web
     name: hollard-copilot
     env: python
-    region: accra  # Change this to your preferred region (e.g., `frankfurt`, `singapore`, etc.)
+    region: frankfurt  # Change this to your preferred region (e.g., `frankfurt`, `singapore`, etc.)
     buildCommand: pip install -r requirements.txt
     startCommand: python app.py
     plan: free
