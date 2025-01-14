@@ -63,24 +63,6 @@ def get_executive():
     name = normalized_executive_data.get(normalized_position, "Position not found")
     return jsonify({"position": position, "name": name})
 
-@app.route('/ask', methods=['POST'])
-def ask():
-    """API to fetch executive information based on a user's question."""
-    data = request.get_json()
-    if not data or 'query' not in data:
-        return jsonify({"error": "Query not provided"}), 400
-
-    query = data['query']
-    normalized_query = normalize_text(query)
-
-    # Debugging logs
-    print(f"DEBUG: Original Query: {query}")
-    print(f"DEBUG: Normalized Query: {normalized_query}")
-
-    # Fetch executive name
-    name = normalized_executive_data.get(normalized_query, "Position not found")
-    return jsonify({"query": query, "answer": name})
-
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))  # Use Render's PORT or default to 5000
